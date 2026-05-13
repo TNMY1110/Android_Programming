@@ -1,0 +1,37 @@
+# Android 기본
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# 빌드 결과물
+*.apk
+*.aab
+*.dex
+app/build/
+
+# 서명 키 (절대 올리면 안 됨!)
+*.jks
+*.keystore
+
+# OS 관련
+Thumbs.db
+desktop.ini
+
+# 로그 파일
+*.log
+
+# 임시 파일
+*.tmp
+*.swp
