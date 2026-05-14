@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,10 +19,20 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap gMap;
     MapFragment mapFrag;
     GroundOverlayOptions videoMark;
+    GroundOverlayOptions placeMark;
+    Button btnPrev, btnNext;
+    List<String> lines = new ArrayList<>();
+    int placeCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFrag = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
+
+        btnPrev = (Button) findViewById(R.id.btnPrev);
+        btnNext = (Button) findViewById(R.id.btnNext);
+        readCSV();
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String line = lines.get(placeCount++);
+                if (placeCount > lines.size()-1)
+                    placeCount = 0;
+                String[] tokens = line.split(",");
+
+                String restName = tokens[0];
+                double lat = Double.parseDouble(tokens[1]);
+                double lon = Double.parseDouble(tokens[2]);
+
+                LatLng point;
+                point = new LatLng(lat,lon);
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 13));
+                placeMark = new GroundOverlayOptions().image(
+                        BitmapDescriptorFactory.fromResource(R.drawable.food))
+                        .position(point, 500f, 500f);
+                gMap.addGroundOverlay(placeMark);
+                Toast.makeText(getApplicationContext(), restName, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String line = lines.get(placeCount--);
+                if (placeCount < 0)
+                    placeCount = lines.size()-1;
+
+                String[] tokens = line.split(",");
+
+                String restName = tokens[0];
+                double lat = Double.parseDouble(tokens[1]);
+                double lon = Double.parseDouble(tokens[2]);
+
+                LatLng point;
+                point = new LatLng(lat,lon);
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 13));
+                placeMark = new GroundOverlayOptions().image(
+                                BitmapDescriptorFactory.fromResource(R.drawable.food))
+                        .position(point, 500f, 500f);
+                gMap.addGroundOverlay(placeMark);
+                Toast.makeText(getApplicationContext(), restName, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -82,5 +146,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
         }
         return false;
+    }
+
+    public void readCSV() {
+        InputStream inputStream = getResources().openRawResource(R.raw.good_place);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        try {
+            String line;
+            line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            reader.close();
+        } catch (Exception e) {}
     }
 }
