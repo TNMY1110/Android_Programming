@@ -6,14 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.Manifest;
 
 import com.cookandroid.robotinspector.db.RobotDBHelper;
 import com.cookandroid.robotinspector.model.Robot;
+import com.cookandroid.robotinspector.service.AlertService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +51,12 @@ public class MainActivity extends AppCompatActivity {
         setTitle("로봇 점검 일지");
 
         // TODO ⑦: Android 13(API 33) 이상이라면 POST_NOTIFICATIONS 권한 요청
-        //   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-        //       && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-        //          != PackageManager.PERMISSION_GRANTED) {
-        //       requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 100);
-        //   }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 100);
+            }
+        }
 
         ListView listView = findViewById(R.id.listViewRobots);
         Button btnShowMap = findViewById(R.id.btnShowMap);
@@ -90,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // TODO ⑦: btnAlertTest.setOnClickListener — AlertService 시작 + extras("title", "message")
+        btnAlertTest.setOnClickListener(v -> {
+            Intent svc = new Intent(this, AlertService.class);
+            svc.putExtra("title", "테스트 알림");
+            svc.putExtra("message", "AlertService가 정상 동작합니다");
+            startService(svc);
+            android.util.Log.i("로봇알림", "startService() 호출 (테스트 버튼)");
+        });
     }
 
     @Override
