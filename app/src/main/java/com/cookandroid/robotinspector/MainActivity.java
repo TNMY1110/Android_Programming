@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // TODO ⑤: btnShowMap.setOnClickListener — startActivity(new Intent(this, MapActivity.class))
+        btnShowMap.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, MapActivity.class));
+        });
 
         // TODO ⑦: btnAlertTest.setOnClickListener — AlertService 시작 + extras("title", "message")
     }
