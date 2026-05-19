@@ -15,18 +15,20 @@ public class RobotDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_robot_detail);
         setTitle("로봇 상세");
 
+        String name = getIntent().getStringExtra("robot_name");
+        String status = getIntent().getStringExtra("robot_status");
+        int battery = getIntent().getIntExtra("robot_battery", 0);
+        android.util.Log.i("로봇상세", "수신: name=" + name + " status=" + status + " battery=" + battery);
+
         TextView tvName = findViewById(R.id.tvRobotName);
         TextView tvStatus = findViewById(R.id.tvRobotStatus);
         TextView tvBattery = findViewById(R.id.tvRobotBattery);
         EditText etMemo = findViewById(R.id.etMemo);
         Button btnSave = findViewById(R.id.btnSave);
 
-        // TODO ③: getIntent().getStringExtra(...) / getIntExtra(...) 로 데이터 받아서 TextView 에 표시
-        //   String name = getIntent().getStringExtra("robot_name");
-        //   String status = getIntent().getStringExtra("robot_status");
-        //   int battery = getIntent().getIntExtra("robot_battery", 0);
-        //   int robotId = getIntent().getIntExtra("robot_id", -1);
-        //   tvName.setText("이름: " + name); ...
+        tvName.setText("이름: " + name);
+        tvStatus.setText("상태: " + status);
+        tvBattery.setText("배터리: " + battery + "%");
 
         // TODO ④: btnSave.setOnClickListener — 메모 비어있지 않으면
         //   1) RobotDBHelper.insertInspection(robotId, memo);

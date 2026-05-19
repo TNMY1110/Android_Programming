@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cookandroid.robotinspector.db.RobotDBHelper;
 import com.cookandroid.robotinspector.model.Robot;
@@ -18,17 +19,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     // TODO ②: detailLauncher 를 멤버 필드로 선언 (Project10_3 스타일)
-    //   registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-    //       result -> {
-    //           if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-    //               String savedName = result.getData().getStringExtra("saved_robot_name");
-    //               // Toast 로 "{savedName} 저장 완료" 표시
-    //           }
-    //       });
-    private ActivityResultLauncher<Intent> detailLauncher;
-
+    private ActivityResultLauncher<Intent> detailLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        // 결과 처리 콜백 — 상세 화면에서 메모를 저장하고 돌아왔을 때 실행
+                        android.util.Log.i("로봇목록", "detailLauncher 콜백 resultCode=" + result.getResultCode());
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            String savedName = result.getData().getStringExtra("saved_robot_name");
+                            android.util.Log.d("로봇목록", "저장 완료된 로봇: " + savedName);
+                            Toast.makeText(getApplicationContext(),
+                                    savedName + " 점검 기록 저장 완료", Toast.LENGTH_SHORT).show();
+                            // 필요 시 목록 새로고침
+                            // List<Robot> refreshed = dbHelper.getAllRobots();
+                            // adapter.notifyDataSetChanged();
+                        } else {
+                            android.util.Log.w("로봇목록", "메모 저장 없이 복귀 (취소 또는 실패)");
+                        }
+                    });
     private BroadcastReceiver batteryReceiver;
 
     @Override
@@ -62,7 +71,18 @@ public class MainActivity extends AppCompatActivity {
         android.util.Log.i("로봇목록", "ListView 어댑터 바인딩 완료");
 
         // TODO ②: listView.setOnItemClickListener(...) → detailLauncher.launch(intent);
-        //   intent.putExtra("robot_id" / "robot_name" / "robot_status" / "robot_battery", ...)
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Robot selected = robotList.get(position);
+            android.util.Log.i("로봇목록", "항목 클릭 position=" + position + " name=" + selected.getName());
+            Intent intent = new Intent(MainActivity.this, RobotDetailActivity.class);
+            intent.putExtra("robot_id", selected.getId());
+            intent.putExtra("robot_name", selected.getName());
+            intent.putExtra("robot_status", selected.getStatus());
+            intent.putExtra("robot_battery", selected.getBattery());
+            // [현대적 방법 2] startActivity / startActivityForResult 대신 launcher.launch 사용
+            detailLauncher.launch(intent);
+        });
+
 
         // TODO ⑤: btnShowMap.setOnClickListener — startActivity(new Intent(this, MapActivity.class))
 
