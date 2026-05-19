@@ -86,12 +86,18 @@ public class RobotDBHelper extends SQLiteOpenHelper {
     public void insertInspection(int robotId, String memo) {
         // TODO: SimpleDateFormat("yyyy-MM-dd HH:mm") 으로 createdAt 생성
         //   execSQL("INSERT INTO inspections VALUES (NULL, " + robotId + ", '...', '...');")
-        String createdAt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
+        SQLiteDatabase sqlDB = this.getWritableDatabase();
+        String createdAt = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(new java.util.Date());
 
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL( "INSERT INTO inspections VALUES (NULL, " + robotId +
-                ", '" + memo + "', '" + createdAt + "');"
-        );
+        String sql = "INSERT INTO inspections VALUES (NULL, "
+                + robotId + ", '"
+                + memo + "', '"
+                + createdAt + "');";
+
+        android.util.Log.d("로봇DB", "INSERT 실행: " + sql);
+        sqlDB.execSQL(sql);
+        android.util.Log.i("로봇DB", "점검 메모 저장 완료 (robotId=" + robotId + ")");
+        sqlDB.close();
     }
 
     public List<Robot> getLowBatteryRobots(int threshold) {
