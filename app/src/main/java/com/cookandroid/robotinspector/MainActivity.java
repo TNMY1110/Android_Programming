@@ -7,8 +7,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.cookandroid.robotinspector.db.RobotDBHelper;
+import com.cookandroid.robotinspector.model.Robot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,11 +49,17 @@ public class MainActivity extends AppCompatActivity {
         Button btnAlertTest = findViewById(R.id.btnAlertTest);
 
         // TODO ①: RobotDBHelper 로 로봇 목록 로드 + ArrayAdapter 로 ListView 바인딩
-        //   RobotDBHelper dbHelper = new RobotDBHelper(this);
-        //   List<Robot> robotList = dbHelper.getAllRobots();
-        //   List<String> displayList = ... ("로봇-A1 | ONLINE | 배터리 85%")
-        //   listView.setAdapter(new ArrayAdapter<>(this,
-        //       android.R.layout.simple_list_item_1, displayList));
+        RobotDBHelper dbHelper = new RobotDBHelper(this);
+        List<Robot> robotList = dbHelper.getAllRobots();
+        android.util.Log.i("로봇목록", "DB에서 로드한 로봇 수: " + robotList.size());
+        // 표시용 문자열 목록 만들기 (예: "로봇-A1 | ONLINE | 배터리 85%")
+        List<String> displayList = new ArrayList<>();
+        for (Robot r : robotList) {
+            displayList.add(r.getName() + " | " + r.getStatus() + " | 배터리 " + r.getBattery() + "%");
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
+        listView.setAdapter(adapter);
+        android.util.Log.i("로봇목록", "ListView 어댑터 바인딩 완료");
 
         // TODO ②: listView.setOnItemClickListener(...) → detailLauncher.launch(intent);
         //   intent.putExtra("robot_id" / "robot_name" / "robot_status" / "robot_battery", ...)
