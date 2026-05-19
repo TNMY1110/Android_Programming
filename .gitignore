@@ -1,0 +1,18 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+app/build/
+
+# 학생이 DB Browser for SQLite 로 직접 만든 DB 파일
+app/src/main/assets/databases/*.db
+
+# 서명 키스토어 (실수 커밋 방지)
+*.jks
+*.keystore

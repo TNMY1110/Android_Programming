@@ -1,0 +1,5 @@
+# 이 파일을 local.properties 로 복사한 뒤, MAPS_API_KEY 값을 본인 키로 교체하세요.
+# (local.properties 는 .gitignore 에 포함되어 GitHub 에 올라가지 않습니다)
+
+sdk.dir=/path/to/your/Android/Sdk
+MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE

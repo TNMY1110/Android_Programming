@@ -1,0 +1,2 @@
+# 이 폴더에 DB Browser for SQLite 로 만든 robots.db 파일을 배치합니다.
+# 학생마다 직접 작성하므로 .db 파일 자체는 git 에서 제외됩니다 (.gitignore 참고).

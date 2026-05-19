@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 지도용 로봇 마커 (벡터 드로어블 placeholder).
+     원하면 PNG 이미지로 교체하세요. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M12,2C9.79,2 8,3.79 8,6L8,9L6,9C4.9,9 4,9.9 4,11L4,18C4,19.1 4.9,20 6,20L18,20C19.1,20 20,19.1 20,18L20,11C20,9.9 19.1,9 18,9L16,9L16,6C16,3.79 14.21,2 12,2zM10,6C10,4.89 10.89,4 12,4C13.11,4 14,4.89 14,6L14,9L10,9L10,6z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9,13L9,16L11,16L11,13zM13,13L13,16L15,16L15,13z" />
+</vector>
